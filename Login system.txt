@@ -1,0 +1,93 @@
+def register():
+    db=open("details.txt","r")
+    email=input("Enter your email:")
+    import re
+    regex='^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    def check(email):
+        if(re.search(regex,email)):
+            print("Valid email,Enter password(Password should contain one uppercase,lowercase,digit,special character and length should be 6 to 15 )")
+        else:
+            print("Invalid email,Enter correctly")
+            register()
+    check(email)
+    password=input("Create password:")
+    password1=input("Confirm password:")
+    if password!=password1:
+        print("Password doesn't match,try again")
+        register()
+    elif password==password1:
+        flag = 0  
+        while True:
+            if (len(password)<5 and len(password)>16):
+                flag = -1
+                break
+            elif not re.search("[a-z]", password):
+                flag = -1
+                break
+            elif not re.search("[A-Z]", password):
+                flag = -1
+                break
+            elif not re.search("[0-9]", password):
+                flag = -1
+                break
+            elif not re.search("[_@$]", password):
+                flag = -1
+                break
+            elif re.search("\s", password):
+                flag = -1
+                break
+            else:
+                flag = 0
+                print("Valid Password,please login")
+                db=open("details.txt","a")
+                db.write(email+","+password+"\n")
+                print("Details added successfully!")
+                choice()
+                break
+  
+        if flag ==-1:
+            print("Not a Valid Password,try again()")
+            register()
+
+
+def login():
+    db=open("details.txt","r")
+    email=input("Enter your email:")
+    password=input("Enter your password:")
+    if not len(email or password)<1:
+        d=[]
+        f=[]
+        for i in db:
+            a,b=i.split(",")
+            b=b.strip()
+            d.append(a)
+            b.append(b)
+        data=dict(zip(d,f))
+        try:
+            if data[email]:
+                try:
+                    if password==data[email]:
+                        print("Login success")
+                    else:
+                        print("email or password is incorrect")
+                        choice()
+                except:
+                    print("Incorrect email or password")
+                    choice()
+            else:
+                print("email doesn't exist")
+                choice()
+        except:
+            print("Login error")
+            choice()
+                    
+def choice(option=None):
+    option=int(input("For Register type 1 and For Login type 2:"))
+    if option==1:
+        register()
+    elif option==2:
+        login()
+    else:
+        print("Enter valid number")
+        choice()
+choice() 
